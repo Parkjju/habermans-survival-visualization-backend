@@ -32,6 +32,37 @@ def get_random_patients(request):
     # 직렬화된 데이터를 응답합니다.
     return Response(serializer.data)
 
+@api_view(['GET'])
+def predict_new(request):
+    # database
+    patients = list(Patient.objects.all())
+
+    # new data
+    age = request.GET.get('age')
+    operation_year = request.GET.get('operation_year')
+    nb_pos_detected = request.GET.get('nb_pos_detected')
+    surv = request.GET.get('surv')
+
+    # 쿼리 파라미터로 DataFrame 생성
+    selected_data = pd.DataFrame([[age, operation_year, nb_pos_detected, surv]], columns=['age', 'operation_year', 'nb_pos_detected', 'surv'])
+
+    # CoxPH instance
+    cph = CoxPHFitter()
+
+    # all database to list
+    all_list = []
+
+    for object in patients:
+        all_list.append([object.age, object.operation_year,object.nb_pos_detected, object.surv])
+
+    all_data = pd.DataFrame(all_list, columns=['age', 'operation_year', 'nb_pos_detected', 'surv'])
+
+    # cox fitting
+    cph.fit(all_data, 'age', event_col='surv')
+
+    # predict
+    sf = cph.predict_survival_function(selected_data)
+    return Response({'results': sf})
 
 @api_view(['GET'])
 def predict_survival(request):
