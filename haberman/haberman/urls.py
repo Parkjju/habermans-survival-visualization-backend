@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from visualization.views import create_patient, predict_survival
+from visualization.views import create_patient, predict_survival, predict_new
 
 urlpatterns = [
     path('patients/create/', create_patient),
     path('patients/random/', predict_survival),
+    path('patients/predict/',predict_new)
 ]
