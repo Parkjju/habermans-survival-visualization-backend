@@ -40,6 +40,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'visualization',
     'import_export',
+    'corsheaders',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    # ... 
+    # 등록할 허용된 오리진(도메인) 목록
 ]
 
 MIDDLEWARE = [
