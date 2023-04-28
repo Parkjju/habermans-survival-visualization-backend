@@ -43,9 +43,8 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    # ... 
-    # 등록할 허용된 오리진(도메인) 목록
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000"
 ]
 
 MIDDLEWARE = [
