@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from visualization.views import create_patient, predict_survival
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('patients/create/', create_patient),
+    path('patients/random/', predict_survival),
 ]
