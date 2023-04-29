@@ -3,7 +3,7 @@ Description=uWSGI service
 After=syslog.target
 
 [Service]
-ExecStart=/home/ubuntu/pyvenv/bin/uwsgi -i /home/ubuntu/srv/habermans-survival-visualization-backend/haberman/.config/uwsgi/mysite.ini
+ExecStart=/home/ubuntu/pyvenv/bin/uwsgi -i /srv/habermans-survival-visualization-backend/haberman/.config/uwsgi/mysite.ini
 
 Restart=always
 KillSignal=SIGQUIT
