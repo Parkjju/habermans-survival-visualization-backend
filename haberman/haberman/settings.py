@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-#*5nccibq9y5qk7a8^5t^gy@0lfmkqvx#he1*cgnh)^9wy*cyp
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "ec2-43-200-171-40.ap-northeast-2.compute.amazonaws.com"
+    "ec2-43-200-171-40.ap-northeast-2.compute.amazonaws.com",
+    "127.0.0.1"
 ]
 
 
