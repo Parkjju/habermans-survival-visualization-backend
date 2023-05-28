@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import Patient
 from .serializers import PatientSerializer
 from lifelines import CoxPHFitter
+from lifelines import KaplanMeierFitter
 from visualization.models import Patient
 import random
 import pandas as pd
@@ -63,6 +64,56 @@ def predict_new(request):
     # predict
     sf = cph.predict_survival_function(selected_data)
     return Response({'results': sf})
+
+@api_view(['GET'])
+def predict_kaplan(request):
+    # Fetch data from the database
+    patients = Patient.objects.all()
+
+    # Kaplan-Meier instance
+    km = KaplanMeierFitter()
+
+    # Convert database data to a list
+    all_list = [[patient.age, patient.operation_year, patient.nb_pos_detected, patient.surv] for patient in patients]
+
+    all_data = pd.DataFrame(all_list, columns=['age', 'operation_year', 'nb_pos_detected', 'surv'])
+
+    # Fit the data into the model
+    km.fit(all_data['age'], event_observed=all_data['surv'])
+
+    # Predict survival probability
+    time_points = range(0, 100, 5)
+    kf = km.predict(time_points)
+
+    # Print the predicted survival probability
+    return Response({'results': kf.tolist()})
+
+@api_view(['GET'])
+def predict_kaplan2(request):
+    # Retrieve all patients from the database
+    patients = Patient.objects.all()
+
+    # Create cohorts based on Nb_pos_detected
+    i1 = [patient for patient in patients if patient.nb_pos_detected >= 1]
+    i2 = [patient for patient in patients if patient.nb_pos_detected < 1]
+
+    # Fit the model for the first cohort
+    km_1 = KaplanMeierFitter()
+    km_1.fit([patient.age for patient in i1], [patient.surv for patient in i1], label='at least one positive axillary detected')
+
+    # Fit the model for the second cohort
+    km_2 = KaplanMeierFitter()
+    km_2.fit([patient.age for patient in i2], [patient.surv for patient in i2], label='no positive axillary nodes detected')
+
+    # Plot the survival curves
+    time_points = range(0, 100, 5)
+    kf1 = km_1.predict(time_points)
+    kf2 = km_2.predict(time_points)
+
+    return Response({'km1': kf1.tolist(), 'km2': kf2.tolist()})
+
+
+
 
 @api_view(['GET'])
 def predict_survival(request):
