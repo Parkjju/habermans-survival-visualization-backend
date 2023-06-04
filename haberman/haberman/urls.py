@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from visualization.views import create_patient, predict_survival, predict_new, predict_kaplan, predict_kaplan2
+from visualization.views import create_patient, predict_survival, predict_new, predict_kaplan, predict_kaplan2, get_summary
 
 urlpatterns = [
     path('patients/create/', create_patient),
     path('patients/random/', predict_survival),
     path('patients/predict/', predict_new),
     path('patients/kaplan/',predict_kaplan),
-    path('patients/kaplan2/', predict_kaplan2)
+    path('patients/kaplan2/', predict_kaplan2),
+    path('patients/summary/', get_summary)
 ]
